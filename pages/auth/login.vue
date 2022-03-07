@@ -35,11 +35,13 @@
                 prepend-inner-icon="mdi-key"
               />
             </div>
-            <div class="main-account">
-              <span class="main-account-text">Already have account ?</span>
-            </div>
             <div class="main-button">
               <v-btn color="#fb620e" width="100%"> LOG IN </v-btn>
+            </div>
+            <div class="main-account">
+              <span class="main-account-text"
+                >Are you a newbie? <b>Sign Up</b></span
+              >
             </div>
           </v-form>
         </div>
@@ -101,7 +103,9 @@ export default {
   }
 
   &-account {
-    text-align: right;
+    text-align: center;
+    margin-top: 1rem;
+
     &-text {
       font-size: 14px;
 
