@@ -11,7 +11,7 @@
       </div>
       <div class="main-button flex-center">
         <div class="main-button-wrapper">
-          <v-btn class="ma-2" outlined color="#fb620e"> LOG IN </v-btn>
+          <v-btn outlined color="#fb620e" @click="handleLogin"> LOG IN </v-btn>
           <br />
           <v-btn depressed color="#fb620e"> SIGN UP </v-btn>
         </div>
@@ -23,6 +23,11 @@
 <script>
 export default {
   name: 'IndexPage',
+  methods: {
+    handleLogin() {
+      return this.$router.push('/auth/login')
+    },
+  },
 }
 </script>
 
@@ -37,7 +42,7 @@ export default {
 .main {
   &-image {
     img {
-      width: 40%;
+      width: 50%;
     }
   }
 
