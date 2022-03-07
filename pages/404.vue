@@ -6,8 +6,7 @@
       <p class="text-center ls-sm">
         <b>
           We're sorry, but the page you were looking for doesn't exist. This may
-          happen, because we always update every content to make it more
-          feasible for the visitor.
+          happen
         </b>
       </p>
     </div>
@@ -72,6 +71,7 @@ export default {
 .ls-sm {
   letter-spacing: 2px;
   font-weight: 200 !important;
+  font-size: 1rem;
 }
 
 .ls-md {

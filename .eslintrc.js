@@ -8,15 +8,7 @@ module.exports = {
     parser: '@babel/eslint-parser',
     requireConfigFile: false,
   },
-  extends: [
-    '@nuxtjs',
-    'prettier',
-    'plugin:nuxt/recommended',
-    'prettier',
-    'eslint:recommended',
-    'plugin:vue/recommended',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['@nuxtjs', 'plugin:nuxt/recommended', 'prettier'],
   plugins: ['vue'],
   // add your custom rules here
   rules: {
@@ -29,7 +21,6 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 'off',
     'vue/multiline-html-element-content-newline': 'off',
     'vue/html-indent': 'off',
-    'prettier/prettier': ['error', { semi: false, endOfLine: 'auto' }],
     'vue/multi-word-component-names': [
       'error',
       {
