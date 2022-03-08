@@ -1,9 +1,8 @@
 import EasyAccess, { defaultMutations } from 'vuex-easy-access'
 
 export const state = () => ({
-  users: {},
-
   loading: false,
+
   show_alert: false,
   status: '',
   alert_title: '',
@@ -57,11 +56,10 @@ export const actions = {
   },
 
   // Get User
-  user({ dispatch }) {
+  user() {
     return this.$axios
-      .get('api/privy/profile/me')
-      .then((response) => {
-        dispatch('set/user', response.data.data.user)
+      .get(`${this.$config.api_url}/profile/me`)
+      .then(() => {
         return true
       })
       .catch(() => {

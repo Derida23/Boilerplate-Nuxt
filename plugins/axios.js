@@ -12,6 +12,14 @@ const AxiosPlugin = ({ $axios, app }) => {
       }
     }
   })
+
+  // $axios.onResponse((res) => {
+  //   console.log('SSR ->', res.data)
+  // })
+
+  // $axios.onError((err) => {
+  //   console.log('ERROR AXIOS ->', err.config)
+  // })
 }
 
 export default AxiosPlugin

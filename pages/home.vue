@@ -5,7 +5,11 @@
 <script>
 export default {
   name: 'HomePage',
-  data() {},
+  data() {
+    return {
+      user: {},
+    }
+  },
   head() {
     return {
       title: `Homepage - Boilerplate Nuxt Javascript`,
@@ -15,8 +19,8 @@ export default {
     this.getUser()
   },
   methods: {
-    getUser() {
-      this.$store.dispatch('session/user')
+    async getUser() {
+      this.user = await this.$store.dispatch('profile/user')
     },
   },
 }

@@ -129,9 +129,8 @@ export default {
   },
   methods: {
     handleRegister() {
-      this.$router.push('/session/register')
+      this.$router.push('/auth/register')
     },
-
     getErrorMessage(field) {
       const errorMessage = []
 
@@ -161,7 +160,7 @@ export default {
         const response = await this.$store.dispatch('session/login', data)
 
         if (response) {
-          this.$router.push('/')
+          this.$router.push('/home')
         }
       }
     },

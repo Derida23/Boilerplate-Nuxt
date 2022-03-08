@@ -2,6 +2,8 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+
+  router: { base: '/', middleware: ['auth'] },
   head: {
     titleTemplate: '%s - Arian Derida',
     title: 'Boilerplate Nuxt Javascript',
@@ -64,6 +66,10 @@ export default {
       target: process.env.API_URL,
       pathRewrite: { '^/api/privy': '' },
     },
+  },
+
+  publicRuntimeConfig: {
+    api_url: process.env.API_URL,
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
