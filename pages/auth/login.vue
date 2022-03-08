@@ -12,34 +12,40 @@
       </div>
       <div class="main-form flex-center w-full">
         <div class="main-form-wrapper">
-          <v-form>
+          <v-form @submit.prevent="handleSave">
             <div>
               <p class="form-title">number phone</p>
               <v-text-field
+                v-model="form.phone"
                 name="phone"
                 outlined
                 dense
                 type="tel"
                 placeholder="Enter your number phone"
                 prepend-inner-icon="mdi-cellphone"
+                :error-messages="getErrorMessage('phone')"
+                @keydown="$v.form.phone.$touch()"
               />
             </div>
             <div>
               <p class="form-title">password</p>
               <v-text-field
-                name="phone"
+                v-model="form.password"
+                name="password"
                 outlined
                 dense
                 type="password"
                 placeholder="Enter your password"
                 prepend-inner-icon="mdi-key"
+                :error-messages="getErrorMessage('password')"
+                @keydown="$v.form.password.$touch()"
               />
             </div>
             <div class="main-button">
-              <v-btn color="#fb620e" width="100%"> LOG IN </v-btn>
+              <v-btn color="#fb620e" width="100%" type="submit"> LOG IN </v-btn>
             </div>
             <div class="main-account">
-              <span class="main-account-text"
+              <span class="main-account-text" @click="handleRegister"
                 >Are you a newbie? <b>Sign Up</b></span
               >
             </div>
@@ -51,12 +57,74 @@
 </template>
 
 <script>
+import { required, numeric } from 'vuelidate/lib/validators'
+
 export default {
   name: 'LoginPage',
+  data() {
+    return {
+      form: {
+        phone: '',
+        password: '',
+        latlong: '',
+        device_token: '',
+        device_type: '',
+      },
+    }
+  },
   head() {
     return {
       title: `Authorization Page - Boilerplate Nuxt Javascript`,
     }
+  },
+  validations() {
+    return {
+      form: {
+        phone: { required, numeric },
+        password: { required },
+        latlong: { required },
+        device_token: { required },
+        device_type: { required },
+      },
+    }
+  },
+  methods: {
+    getErrorMessage(field) {
+      const errorMessage = []
+
+      if (this.$v.form[field]?.$invalid && this.$v.form[field]?.$dirty) {
+        if (this.$v.form[field]?.required === false) {
+          errorMessage.push(`${field} is required`)
+        }
+
+        if (this.$v.form[field]?.numeric === false) {
+          errorMessage.push(`wrong phone format`)
+        }
+      }
+
+      return errorMessage
+    },
+    async handleSave() {
+      this.$v.$touch()
+
+      if (!this.$v.$invalid) {
+        const data = {
+          ...this.form,
+          latlong: '-6.200000,106.816666',
+          device_token: (Math.random() + 1).toString(36).substring(2),
+          device_type: 2,
+        }
+
+        const response = await this.$store.dispatch('auth/login', data)
+
+        if (response) {
+          this.$router.push('/')
+        }
+      }
+    },
+    handleRegister() {
+      this.$router.push('/auth/register')
+    },
   },
 }
 </script>
