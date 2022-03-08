@@ -34,15 +34,24 @@
                 name="password"
                 outlined
                 dense
-                type="password"
                 placeholder="Enter your password"
                 prepend-inner-icon="mdi-key"
+                :type="show ? 'password' : 'text'"
+                :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                 :error-messages="getErrorMessage('password')"
+                @click:append="show = !show"
                 @keydown="$v.form.password.$touch()"
               />
             </div>
             <div class="main-button">
-              <v-btn color="#fb620e" width="100%" type="submit"> LOG IN </v-btn>
+              <v-btn
+                color="#fb620e"
+                width="100%"
+                type="submit"
+                :loading="loading"
+              >
+                LOG IN
+              </v-btn>
             </div>
             <div class="main-account">
               <span class="main-account-text" @click="handleRegister"
@@ -63,6 +72,7 @@ export default {
   name: 'LoginPage',
   data() {
     return {
+      show: false,
       form: {
         phone: '',
         password: '',
@@ -77,18 +87,51 @@ export default {
       title: `Authorization Page - Boilerplate Nuxt Javascript`,
     }
   },
+  computed: {
+    loading() {
+      return this.$store.get('auth/loading')
+    },
+
+    // Notification
+    show_alert() {
+      return this.$store.get('auth/show_alert')
+    },
+    status() {
+      return this.$store.get('auth/status')
+    },
+    alert_title() {
+      return this.$store.get('auth/alert_title')
+    },
+    alert_message() {
+      return this.$store.get('auth/alert_message')
+    },
+  },
   validations() {
     return {
       form: {
         phone: { required, numeric },
         password: { required },
-        latlong: { required },
-        device_token: { required },
-        device_type: { required },
       },
     }
   },
+  watch: {
+    show_alert(val) {
+      if (val) {
+        this.$notify({
+          type: this.status,
+          title: this.alert_title,
+          text: this.alert_message,
+        })
+
+        this.$store.set('auth/show_alert', false)
+      }
+    },
+  },
   methods: {
+    handleRegister() {
+      this.$router.push('/auth/register')
+    },
+
     getErrorMessage(field) {
       const errorMessage = []
 
@@ -122,16 +165,13 @@ export default {
         }
       }
     },
-    handleRegister() {
-      this.$router.push('/auth/register')
-    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .container {
-  height: 90vh;
+  height: 95vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,6 +190,7 @@ export default {
         font-weight: 500 !important;
         font-size: 1rem;
         color: gray;
+        margin-top: -14px;
       }
     }
   }
