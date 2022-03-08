@@ -1,14 +1,14 @@
-import { set } from '@/utils'
+import _set from 'lodash/set'
 
-const AxiosPlugin = ({ $axios, app, route, store, redirect }) => {
+const AxiosPlugin = ({ $axios, app }) => {
   // Handle Axios onRequest
   $axios.onRequest((config) => {
-    if (route.name.includes('admin')) {
-      const token = store.state.oauth.accessToken
+    // Check if url is profile need Bearer
+    if (config.url.includes('profile')) {
+      const token = app.$cookiz.get('x-csrf-token')
 
-      // eslint-disable-next-line no-prototype-builtins
-      if (!config.headers.hasOwnProperty('Authorization') && token) {
-        set(config.headers, 'Authorization', `Bearer ${token}`)
+      if (token) {
+        _set(config.headers, 'Authorization', token)
       }
     }
   })

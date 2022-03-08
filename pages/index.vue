@@ -25,7 +25,7 @@ export default {
   name: 'IndexPage',
   methods: {
     handleLogin() {
-      return this.$router.push('/auth/login')
+      return this.$router.push('/session/login')
     },
   },
 }

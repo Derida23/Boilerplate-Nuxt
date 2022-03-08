@@ -1,6 +1,8 @@
 import EasyAccess, { defaultMutations } from 'vuex-easy-access'
 
 export const state = () => ({
+  users: {},
+
   loading: false,
   show_alert: false,
   status: '',
@@ -15,7 +17,7 @@ export const mutations = {
 export const plugins = [EasyAccess()]
 
 export const actions = {
-  // Login Vuex Action
+  // Post login
   login({ dispatch }, body) {
     dispatch('set/loading', true)
     return this.$axios
@@ -50,6 +52,19 @@ export const actions = {
 
         dispatch('set/loading', false)
 
+        return false
+      })
+  },
+
+  // Get User
+  user({ dispatch }) {
+    return this.$axios
+      .get('api/privy/profile/me')
+      .then((response) => {
+        dispatch('set/user', response.data.data.user)
+        return true
+      })
+      .catch(() => {
         return false
       })
   },

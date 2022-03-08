@@ -89,21 +89,21 @@ export default {
   },
   computed: {
     loading() {
-      return this.$store.get('auth/loading')
+      return this.$store.get('session/loading')
     },
 
     // Notification
     show_alert() {
-      return this.$store.get('auth/show_alert')
+      return this.$store.get('session/show_alert')
     },
     status() {
-      return this.$store.get('auth/status')
+      return this.$store.get('session/status')
     },
     alert_title() {
-      return this.$store.get('auth/alert_title')
+      return this.$store.get('session/alert_title')
     },
     alert_message() {
-      return this.$store.get('auth/alert_message')
+      return this.$store.get('session/alert_message')
     },
   },
   validations() {
@@ -123,13 +123,13 @@ export default {
           text: this.alert_message,
         })
 
-        this.$store.set('auth/show_alert', false)
+        this.$store.set('session/show_alert', false)
       }
     },
   },
   methods: {
     handleRegister() {
-      this.$router.push('/auth/register')
+      this.$router.push('/session/register')
     },
 
     getErrorMessage(field) {
@@ -158,7 +158,7 @@ export default {
           device_type: 2,
         }
 
-        const response = await this.$store.dispatch('auth/login', data)
+        const response = await this.$store.dispatch('session/login', data)
 
         if (response) {
           this.$router.push('/')
