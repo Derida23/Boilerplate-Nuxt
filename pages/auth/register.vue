@@ -115,14 +115,15 @@ export default {
         country: value.name,
       }
     },
-    handleSave() {
+    async handleSave() {
       const data = {
         ...this.form,
         device_token: (Math.random() + 1).toString(36).substring(2),
         device_type: 2,
       }
 
-      console.log(data)
+      const response = await this.$store.dispatch('session/register', data)
+      return response
     },
   },
 }
