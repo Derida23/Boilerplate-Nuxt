@@ -13,10 +13,11 @@
 
       <div class="main-form flex-center w-full">
         <div class="main-form-wrapper">
-          <v-form>
+          <v-form @submit.prevent="handleSave">
             <div>
               <p class="form-title">number phone</p>
               <v-text-field
+                v-model="form.phone"
                 name="phone"
                 outlined
                 dense
@@ -24,26 +25,21 @@
                 placeholder="Enter your number phone"
                 prepend-inner-icon="mdi-cellphone"
               />
-              <!-- v-model="form.phone" -->
-              <!-- :error-messages="getErrorMessage('phone')" -->
-              <!-- @keydown="$v.form.phone.$touch()" -->
             </div>
 
             <div>
               <p class="form-title">password</p>
               <v-text-field
+                v-model="form.password"
                 name="password"
                 outlined
                 dense
                 placeholder="Enter your password"
                 prepend-inner-icon="mdi-key"
+                :type="show ? 'password' : 'text'"
+                :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="show = !show"
               />
-              <!-- v-model="form.password" -->
-              <!-- :type="show ? 'password' : 'text'" -->
-              <!-- :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" -->
-              <!-- :error-messages="getErrorMessage('password')" -->
-              <!-- @click:append="show = !show" -->
-              <!-- @keydown="$v.form.password.$touch()" -->
             </div>
 
             <div>
@@ -56,16 +52,14 @@
                 return-object
                 placeholder="Select your country"
                 prepend-inner-icon="mdi-map"
+                :items="loading ? [] : locations"
+                :loading="loading"
+                @change="handleCountry"
               />
             </div>
 
             <div class="main-button">
-              <v-btn
-                color="#fb620e"
-                width="100%"
-                type="submit"
-                :loading="loading"
-              >
+              <v-btn color="#fb620e" width="100%" type="submit">
                 REGISTER
               </v-btn>
             </div>
@@ -84,9 +78,51 @@
 <script>
 export default {
   name: 'RegisterPage',
+  data() {
+    return {
+      locations: [],
+      show: false,
+      form: {
+        phone: '',
+        password: '',
+        country: '',
+        latlong: '',
+        device_token: '',
+        device_type: '',
+      },
+    }
+  },
+  computed: {
+    loading() {
+      return this.$store.get('location/loading')
+    },
+  },
+  mounted() {
+    this.getLocations()
+  },
   methods: {
+    async getLocations() {
+      const response = await this.$store.dispatch('location/country')
+      this.locations = response
+    },
     handleLogin() {
       return this.$router.push('/auth/login')
+    },
+    handleCountry(value) {
+      this.form = {
+        ...this.form,
+        latlong: `${value.lat},${value.long},`,
+        country: value.name,
+      }
+    },
+    handleSave() {
+      const data = {
+        ...this.form,
+        device_token: (Math.random() + 1).toString(36).substring(2),
+        device_type: 2,
+      }
+
+      console.log(data)
     },
   },
 }

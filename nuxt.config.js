@@ -83,6 +83,9 @@ export default {
     theme: {
       dark: false,
       themes: {
+        light: {
+          primary: '#FB620E',
+        },
         dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,

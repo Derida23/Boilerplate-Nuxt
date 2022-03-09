@@ -16,14 +16,4 @@ export const mutations = {
 
 export const plugins = [EasyAccess()]
 
-export const actions = {
-  // Get User Data
-  async getUser({ dispatch }) {
-    try {
-      const res = await this.$axios.get(`api/admin/api/v1/agent/me`)
-      dispatch('set/user', res.data.data.agent)
-    } catch (e) {
-      this.$sentry.captureException(e)
-    }
-  },
-}
+export const actions = {}
