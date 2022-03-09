@@ -66,10 +66,15 @@ export default {
       target: process.env.API_URL,
       pathRewrite: { '^/api/privy': '' },
     },
+    '/api/country': {
+      target: process.env.COUNTRY_URL,
+      pathRewrite: { '^/api/country': '' },
+    },
   },
 
   publicRuntimeConfig: {
     api_url: process.env.API_URL,
+    country_url: process.env.COUNTRY_URL,
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
