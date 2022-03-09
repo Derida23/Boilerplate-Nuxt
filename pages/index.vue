@@ -13,7 +13,9 @@
         <div class="main-button-wrapper">
           <v-btn outlined color="#fb620e" @click="handleLogin"> LOG IN </v-btn>
           <br />
-          <v-btn depressed color="#fb620e"> SIGN UP </v-btn>
+          <v-btn depressed color="#fb620e" @click="handleRegister">
+            SIGN UP
+          </v-btn>
         </div>
       </div>
     </div>
@@ -27,6 +29,9 @@ export default {
   methods: {
     handleLogin() {
       return this.$router.push('/auth/login')
+    },
+    handleRegister() {
+      return this.$router.push('/auth/register')
     },
   },
 }
