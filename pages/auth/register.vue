@@ -153,8 +153,11 @@ export default {
   },
   methods: {
     async getLocations() {
+      this.$overlay(true)
+
       const response = await this.$store.dispatch('location/country')
       this.locations = response
+      this.$overlay(false)
     },
     handleLogin() {
       return this.$router.push('/auth/login')

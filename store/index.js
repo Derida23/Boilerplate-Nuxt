@@ -5,6 +5,7 @@ export const state = () => ({
     name: '',
     roles: [{ name: '' }],
   },
+  overlay: false,
 })
 
 export const mutations = {

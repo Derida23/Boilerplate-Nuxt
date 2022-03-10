@@ -24,6 +24,8 @@ export default {
     port: 8080, // default: 3000
   },
 
+  loading: '@/components/Loading.vue',
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     '~/assets/scss/poppins.scss',
@@ -41,6 +43,7 @@ export default {
     { src: '@/plugins/axios' },
     { src: '@/plugins/validation' },
     { src: '@/plugins/notify', ssr: false },
+    { src: '@/plugins/overlay', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
