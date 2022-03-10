@@ -75,6 +75,7 @@ export default {
   publicRuntimeConfig: {
     api_url: process.env.API_URL,
     country_url: process.env.COUNTRY_URL,
+    salt: process.env.SALT,
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

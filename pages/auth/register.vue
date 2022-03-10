@@ -22,8 +22,10 @@
                 outlined
                 dense
                 type="tel"
-                placeholder="Enter your number phone"
+                placeholder="Number phone with (62)"
                 prepend-inner-icon="mdi-cellphone"
+                :error-messages="getErrorMessage('phone')"
+                @keydown="$v.form.phone.$touch()"
               />
             </div>
 
@@ -38,13 +40,16 @@
                 prepend-inner-icon="mdi-key"
                 :type="show ? 'password' : 'text'"
                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                :error-messages="getErrorMessage('password')"
                 @click:append="show = !show"
+                @keydown="$v.form.password.$touch()"
               />
             </div>
 
             <div>
               <p class="form-title">country</p>
               <v-autocomplete
+                name="country"
                 item-text="name"
                 item-value="lat"
                 outlined
@@ -54,7 +59,9 @@
                 prepend-inner-icon="mdi-map"
                 :items="loading ? [] : locations"
                 :loading="loading"
+                :error-messages="getErrorMessage('country')"
                 @change="handleCountry"
+                @keydown="$v.form.country.$touch()"
               />
             </div>
 
@@ -76,6 +83,8 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
+
 export default {
   name: 'RegisterPage',
   data() {
@@ -92,9 +101,51 @@ export default {
       },
     }
   },
+  validations() {
+    // const formatPhone = helpers.regex('formatPassword', /^628[0-9]{10,}$/)
+    // const formatPassword = helpers.regex(
+    //   'formatPassword',
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]{8,}$/
+    // )
+
+    return {
+      form: {
+        phone: { required },
+        password: { required },
+        country: { required },
+      },
+    }
+  },
   computed: {
     loading() {
       return this.$store.get('location/loading')
+    },
+
+    // Notification
+    show_alert() {
+      return this.$store.get('session/show_alert')
+    },
+    status() {
+      return this.$store.get('session/status')
+    },
+    alert_title() {
+      return this.$store.get('session/alert_title')
+    },
+    alert_message() {
+      return this.$store.get('session/alert_message')
+    },
+  },
+  watch: {
+    show_alert(val) {
+      if (val) {
+        this.$notify({
+          type: this.status,
+          title: this.alert_title,
+          text: this.alert_message,
+        })
+
+        this.$store.set('session/show_alert', false)
+      }
     },
   },
   mounted() {
@@ -111,19 +162,45 @@ export default {
     handleCountry(value) {
       this.form = {
         ...this.form,
-        latlong: `${value.lat},${value.long},`,
-        country: value.name,
+        latlong: value ? `${value.lat},${value.long},` : '',
+        country: value?.name ?? '',
       }
     },
-    async handleSave() {
-      const data = {
-        ...this.form,
-        device_token: (Math.random() + 1).toString(36).substring(2),
-        device_type: 2,
+    getErrorMessage(field) {
+      const errorMessage = []
+
+      if (this.$v.form[field]?.$invalid && this.$v.form[field]?.$dirty) {
+        if (this.$v.form[field]?.required === false) {
+          errorMessage.push(`${field} is required`)
+        }
+
+        // if (this.$v.form[field]?.formatPhone === false) {
+        //   errorMessage.push(`wrong phone format`)
+        // }
+
+        // if (this.$v.form[field]?.formatPassword === false) {
+        //   errorMessage.push(`min 8 with special character, lower and uppercase`)
+        // }
       }
 
-      const response = await this.$store.dispatch('session/register', data)
-      return response
+      return errorMessage
+    },
+    async handleSave() {
+      this.$v.$touch()
+
+      if (!this.$v.$invalid) {
+        const data = {
+          ...this.form,
+          device_token: (Math.random() + 1).toString(36).substring(2),
+          device_type: 2,
+        }
+
+        const response = await this.$store.dispatch('session/register', data)
+
+        if (response) {
+          this.$router.push('/')
+        }
+      }
     },
   },
 }

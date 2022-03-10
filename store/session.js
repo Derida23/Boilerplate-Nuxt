@@ -17,7 +17,7 @@ export const mutations = {
 export const plugins = [EasyAccess()]
 
 export const actions = {
-  // Post login
+  // Feature login
   login({ dispatch }, body) {
     dispatch('set/loading', true)
     return this.$axios
@@ -55,16 +55,12 @@ export const actions = {
       })
   },
 
+  // Feature register
   register({ dispatch }, body) {
     dispatch('set/loading', true)
     return this.$axios
       .post('/api/privy/register', body)
       .then((response) => {
-        dispatch('set/show_alert', true)
-        dispatch('set/status', 'success')
-        dispatch('set/alert_title', `Create account success`)
-        dispatch('set/alert_message', response.data.message)
-
         const dataCookies = {
           user_id: response.data.data.user.id,
           phone: body.phone,
@@ -84,6 +80,10 @@ export const actions = {
           path: '/',
           expires: dateNow,
         })
+        dispatch('set/show_alert', true)
+        dispatch('set/status', 'success')
+        dispatch('set/alert_title', `Create account success`)
+        dispatch('set/alert_message', response.data.message)
 
         dispatch('set/loading', false)
         return true
@@ -108,7 +108,7 @@ export const actions = {
       })
   },
 
-  // Get User
+  // Feature User
   user() {
     return this.$axios
       .get(`${this.$config.api_url}/profile/me`)
