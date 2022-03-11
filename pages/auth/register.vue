@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="main-image flex-center w-full">
-        <img src="~/static/img/login.png" alt="img-login" />
+        <img src="~/static/img/register.png" alt="img-register" />
       </div>
 
       <div class="main-form flex-center w-full">
@@ -236,16 +236,12 @@ export default {
   }
 
   &-image {
-    margin-top: 2rem;
-
     img {
-      width: 50%;
+      width: 30%;
     }
   }
 
   &-form {
-    margin-top: 2rem;
-
     &-wrapper {
       width: 60%;
     }

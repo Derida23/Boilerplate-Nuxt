@@ -195,16 +195,12 @@ export default {
   }
 
   &-image {
-    margin-top: 2rem;
-
     img {
-      width: 50%;
+      width: 40%;
     }
   }
 
   &-form {
-    margin-top: 2rem;
-
     &-wrapper {
       width: 60%;
     }
