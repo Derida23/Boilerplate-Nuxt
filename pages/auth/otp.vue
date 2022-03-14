@@ -13,7 +13,13 @@
 
       <div class="main-form flex-center w-full">
         <div class="main-form-wrapper">
-          <v-otp-input v-model="otp_code" length="4"></v-otp-input>
+          <v-otp-input
+            v-model="otp_code"
+            length="4"
+            name="otp_code"
+            :error-messages="getErrorMessage('otp_code')"
+            @keydown="$v.otp_code.$touch()"
+          ></v-otp-input>
         </div>
       </div>
       <div class="main-account">
@@ -26,12 +32,35 @@
 </template>
 
 <script>
+import { required, minLength } from 'vuelidate/lib/validators'
+
 export default {
   name: 'OtpPage',
   data() {
     return {
       otp_code: '',
     }
+  },
+  validations() {
+    return {
+      otp_code: { required, minLength: minLength(4) },
+    }
+  },
+  methods: {
+    getErrorMessage(field) {
+      const errorMessage = []
+
+      if (this.$v[field]?.$invalid && this.$v[field]?.$dirty) {
+        if (this.$v[field]?.required === false) {
+          errorMessage.push(`${field} is required`)
+        }
+        if (this.$v[field]?.minLength === false) {
+          errorMessage.push(`${field} min length 4`)
+        }
+      }
+
+      return errorMessage
+    },
   },
 }
 </script>

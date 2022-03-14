@@ -190,7 +190,7 @@ export default {
     },
     async handleSave() {
       this.$v.$touch()
-
+      this.$overlay(true)
       if (!this.$v.$invalid) {
         const data = {
           ...this.form,
@@ -199,9 +199,10 @@ export default {
         }
 
         const response = await this.$store.dispatch('session/register', data)
+        this.$overlay(false)
 
         if (response) {
-          this.$router.push('/')
+          this.$router.push('/auth/otp')
         }
       }
     },
