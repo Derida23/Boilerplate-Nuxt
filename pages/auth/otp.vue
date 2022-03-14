@@ -18,6 +18,7 @@
             length="4"
             name="otp_code"
             :error-messages="getErrorMessage('otp_code')"
+            @finish="handleSave"
             @keydown="$v.otp_code.$touch()"
           ></v-otp-input>
         </div>
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { required, minLength } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'OtpPage',
@@ -41,9 +42,46 @@ export default {
       otp_code: '',
     }
   },
+  head() {
+    return {
+      title: `One Time Password - Boilerplate Nuxt Javascript`,
+    }
+  },
+  computed: {
+    loading() {
+      return this.$store.get('session/loading')
+    },
+
+    // Notification
+    show_alert() {
+      return this.$store.get('session/show_alert')
+    },
+    status() {
+      return this.$store.get('session/status')
+    },
+    alert_title() {
+      return this.$store.get('session/alert_title')
+    },
+    alert_message() {
+      return this.$store.get('session/alert_message')
+    },
+  },
+  watch: {
+    show_alert(val) {
+      if (val) {
+        this.$notify({
+          type: this.status,
+          title: this.alert_title,
+          text: this.alert_message,
+        })
+
+        this.$store.set('session/show_alert', false)
+      }
+    },
+  },
   validations() {
     return {
-      otp_code: { required, minLength: minLength(4) },
+      otp_code: { required },
     }
   },
   methods: {
@@ -54,12 +92,25 @@ export default {
         if (this.$v[field]?.required === false) {
           errorMessage.push(`${field} is required`)
         }
-        if (this.$v[field]?.minLength === false) {
-          errorMessage.push(`${field} min length 4`)
-        }
       }
 
       return errorMessage
+    },
+    handleLogin() {
+      this.$router.push('/auth/login')
+    },
+    async handleSave() {
+      this.$v.$touch()
+
+      if (!this.$v.$invalid) {
+        const response = await this.$store.dispatch('session/otp', {
+          otp_code: this.otp_code,
+        })
+
+        if (response) {
+          this.$router.push('/home')
+        }
+      }
     },
   },
 }

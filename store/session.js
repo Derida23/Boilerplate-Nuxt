@@ -24,7 +24,6 @@ export const actions = {
       .post('api/privy/oauth/sign_in', body)
       .then((response) => {
         dispatch('set/status', 'success')
-        dispatch('set/show_alert', false)
 
         this.$cookiz.set('x-csrf-token', response.data.data.user.access_token, {
           path: '/',
@@ -67,8 +66,8 @@ export const actions = {
         }
 
         // Logic crypto 10 minutes
-        const dateNow = new Date()
-        dateNow.setTime(dateNow.getTime() + 10 * 60 * 1000)
+        // const dateNow = new Date()
+        // dateNow.setTime(dateNow.getTime() + 10 * 60 * 1000)
 
         // Set convert for otp
         const convert = CryptoJS.AES.encrypt(
@@ -78,7 +77,9 @@ export const actions = {
 
         this.$cookiz.set('__OTP', convert.toString(), {
           path: '/',
-          expires: dateNow,
+          // expires: dateNow,
+
+          maxAge: 60 * 60 * 24 * 1,
         })
         dispatch('set/show_alert', true)
         dispatch('set/status', 'success')
@@ -107,6 +108,62 @@ export const actions = {
         return false
       })
   },
+
+  // Feature otp
+  otp({ dispatch }, body) {
+    dispatch('set/loading', true)
+
+    const cookies = this.$cookiz.get('__OTP')
+
+    // check cookies user id
+    if (!cookies) {
+      dispatch('set/show_alert', true)
+      dispatch('set/status', 'error')
+      dispatch('set/alert_title', `User authenticated`)
+      dispatch('set/alert_message', 'user can not registered')
+
+      return false
+    } else {
+      const bytes = CryptoJS.AES.decrypt(cookies, this.$config.salt)
+      const deconvert = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+
+      const data = { user_id: deconvert.user_id, otp_code: body.otp_code }
+
+      return this.$axios
+        .post('api/privy/register/otp/match', data)
+        .then(() => {
+          dispatch('set/show_alert', true)
+          dispatch('set/status', 'success')
+          dispatch('set/alert_title', `OTP authentication`)
+          dispatch('set/alert_message', 'Success register in calore')
+
+          this.$cookiz.remove('__OTP')
+
+          dispatch('set/loading', false)
+          return true
+        })
+        .catch((err) => {
+          dispatch('set/show_alert', true)
+          dispatch('set/status', 'error')
+
+          if (err.response.status === 422) {
+            dispatch('set/alert_title', `One time password error`)
+            dispatch('set/alert_message', err.response.data.error.errors[0])
+          } else {
+            dispatch('set/alert_title', 'System not response')
+            dispatch(
+              'set/alert_message',
+              'the system is busy, please try again later'
+            )
+          }
+
+          dispatch('set/loading', false)
+          return false
+        })
+    }
+  },
+
+  // Request OTP
 
   // Feature User
   user() {

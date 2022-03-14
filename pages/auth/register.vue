@@ -101,6 +101,11 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      title: `Register - Boilerplate Nuxt Javascript`,
+    }
+  },
   validations() {
     // const formatPhone = helpers.regex('formatPassword', /^628[0-9]{10,}$/)
     // const formatPassword = helpers.regex(
@@ -118,7 +123,7 @@ export default {
   },
   computed: {
     loading() {
-      return this.$store.get('location/loading')
+      return this.$store.get('session/loading')
     },
 
     // Notification
@@ -199,12 +204,12 @@ export default {
         }
 
         const response = await this.$store.dispatch('session/register', data)
-        this.$overlay(false)
 
         if (response) {
           this.$router.push('/auth/otp')
         }
       }
+      this.$overlay(false)
     },
   },
 }
