@@ -48,7 +48,8 @@ export default {
 .main {
   &-image {
     img {
-      width: 50%;
+      width: 25%;
+      margin-bottom: 1rem;
     }
   }
 
@@ -75,7 +76,7 @@ export default {
     width: 100%;
 
     &-wrapper {
-      width: 50%;
+      width: 25%;
       button {
         margin-top: 1rem;
         width: 100%;

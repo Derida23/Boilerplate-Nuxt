@@ -66,8 +66,8 @@ export const actions = {
         }
 
         // Logic crypto 10 minutes
-        // const dateNow = new Date()
-        // dateNow.setTime(dateNow.getTime() + 10 * 60 * 1000)
+        const dateNow = new Date()
+        dateNow.setTime(dateNow.getTime() + 10 * 60 * 1000)
 
         // Set convert for otp
         const convert = CryptoJS.AES.encrypt(
@@ -77,9 +77,9 @@ export const actions = {
 
         this.$cookiz.set('__OTP', convert.toString(), {
           path: '/',
-          // expires: dateNow,
+          expires: dateNow,
 
-          maxAge: 60 * 60 * 24 * 1,
+          // maxAge: 60 * 60 * 24 * 1,
         })
         dispatch('set/show_alert', true)
         dispatch('set/status', 'success')
@@ -131,12 +131,21 @@ export const actions = {
 
       return this.$axios
         .post('api/privy/register/otp/match', data)
-        .then(() => {
+        .then((response) => {
           dispatch('set/show_alert', true)
           dispatch('set/status', 'success')
           dispatch('set/alert_title', `OTP authentication`)
           dispatch('set/alert_message', 'Success register in calore')
 
+          this.$cookiz.set(
+            'x-csrf-token',
+            response.data.data.user.access_token.toString(),
+            {
+              path: '/',
+
+              maxAge: 60 * 60 * 24 * 1,
+            }
+          )
           this.$cookiz.remove('__OTP')
 
           dispatch('set/loading', false)
