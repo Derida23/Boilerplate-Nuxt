@@ -19,3 +19,16 @@ body {
   color: gray;
   margin-bottom: 2px !important;
 }
+
+.shadow {
+  box-shadow: 0 5px 10px rgba(154, 160, 185, 0.05),
+    0 15px 40px rgba(166, 173, 201, 0.2);
+}
+
+.text-center {
+  text-align: center;
+}
+
+main {
+  background-color: #e6e9f1;
+}
