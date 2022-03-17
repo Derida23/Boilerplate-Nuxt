@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="main-account">
-        <span class="main-account-text" @click="handleLogin"
+        <span class="main-account-text" @click="handleResend"
           >Didn't receive a OTP? <b>Resend OTP</b></span
         >
       </div>
@@ -111,6 +111,9 @@ export default {
           this.$router.push('/home')
         }
       }
+    },
+    async handleResend() {
+      await this.$store.dispatch('session/resend')
     },
   },
 }

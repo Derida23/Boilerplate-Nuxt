@@ -173,6 +173,56 @@ export const actions = {
   },
 
   // Request OTP
+  resend({ dispatch }) {
+    dispatch('set/loading', true)
+
+    const cookies = this.$cookiz.get('__OTP')
+
+    // check cookies user id
+    if (!cookies) {
+      dispatch('set/show_alert', true)
+      dispatch('set/status', 'error')
+      dispatch('set/alert_title', `User authenticated`)
+      dispatch('set/alert_message', 'user can not registered')
+
+      return false
+    } else {
+      const bytes = CryptoJS.AES.decrypt(cookies, this.$config.salt)
+      const deconvert = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+
+      const data = { phone: deconvert.phone }
+
+      return this.$axios
+        .post('api/privy/register/otp/request', data)
+        .then((response) => {
+          dispatch('set/show_alert', true)
+          dispatch('set/status', 'success')
+          dispatch('set/alert_title', `OTP authentication`)
+          dispatch('set/alert_message', `Otp send to ${data.phone}`)
+
+          dispatch('set/loading', false)
+          return true
+        })
+        .catch((err) => {
+          dispatch('set/show_alert', true)
+          dispatch('set/status', 'error')
+
+          if (err.response.status === 422) {
+            dispatch('set/alert_title', `One time password error`)
+            dispatch('set/alert_message', err.response.data.error.errors[0])
+          } else {
+            dispatch('set/alert_title', 'System not response')
+            dispatch(
+              'set/alert_message',
+              'the system is busy, please try again later'
+            )
+          }
+
+          dispatch('set/loading', false)
+          return false
+        })
+    }
+  },
 
   // Feature User
   user() {
