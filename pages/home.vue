@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mb-10">
     <div class="main">
       <div class="image-banner">
         <!-- <img src="img/banner.jpg" alt="image banner" /> -->
@@ -67,6 +67,23 @@
           </div>
         </div>
       </div>
+
+      <div class="main-wrapper shadow mb-10">
+        <h3>Education</h3>
+        <div v-if="company_name"></div>
+        <div v-else>
+          <div class="w-full flex-center">
+            <img
+              v-for="(career, index) in careers"
+              :key="index + 1"
+              :src="`img/education/${career}.svg`"
+              alt="image career"
+              class="image-career"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="h-10"></div>
     </div>
   </div>
 </template>
@@ -141,7 +158,7 @@ export default {
   }
 
   h3 {
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
     text-align: center;
     font-size: 1.6rem;
   }
